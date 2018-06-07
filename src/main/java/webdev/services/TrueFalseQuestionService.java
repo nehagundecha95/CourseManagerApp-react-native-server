@@ -4,12 +4,15 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import webdev.models.Assignment;
 import webdev.models.Exam;
 import webdev.models.TrueFalseQuestion;
 import webdev.repositories.EssayRepository;
@@ -60,5 +63,30 @@ public class TrueFalseQuestionService {
 		
 		return trueFalseRepository.save(newTrueFalseQuestion);
 		
+	}
+	
+	@PutMapping("/api/exam/{examId}/update/truefalse")
+	public TrueFalseQuestion updateTrueFalseQuestion(@PathVariable("examId") int id, @RequestBody TrueFalseQuestion newQuestion) {
+		System.out.println("in here update true false");
+		Optional<TrueFalseQuestion> data = trueFalseRepository.findById(id);
+		System.out.println("assignmentId:"+id);
+		if(data.isPresent()) {
+			TrueFalseQuestion question = data.get();
+			question.setDescription(newQuestion.getDescription());
+			question.setPoints(newQuestion.getPoints());
+//			assignment.setText(newAssignment.getText());
+			question.setTitle(newQuestion.getTitle());
+			question.setTrue(newQuestion.isTrue());
+//			module.setCourse(newModule.getCourse());
+			
+			trueFalseRepository.save(question);	
+			return question;
+		}	
+		else 
+			return null;
+	}
+	@DeleteMapping("/api/exam/truefalse/{questionId}")
+	public void deleteTrueFalseQuestion(@PathVariable("questionId")int questionId) {
+		trueFalseRepository.deleteById(questionId);
 	}
 }

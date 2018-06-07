@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -113,6 +114,21 @@ public class ExamService {
 		newExam.setWidgetType("Exam");
 		return examRepository.save(newExam);
 		
+	}
+	
+	@PutMapping("/api/exam/{examId}/update")
+	public Exam updateExam(@PathVariable("examId") int id, @RequestBody Exam newExam) {
+		System.out.println("in here update true false");
+		Optional<Exam> data = examRepository.findById(id);
+		if(data.isPresent()) {
+			Exam exam = data.get();
+			exam.setDescription(newExam.getDescription());
+			exam.setTitle(newExam.getTitle());
+			examRepository.save(exam);	
+			return exam;
+		}	
+		else 
+			return null;
 	}
 	
 	@DeleteMapping("/api/exam/{eid}")
